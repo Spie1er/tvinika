@@ -17,7 +17,7 @@ export default function RootLayout({
   children: ReactNode
 }>) {
   return (
-    <html lang='ka' className={`dark`}>
+    <html lang='ka' className='dark'>
       <body
         className='flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900'
         suppressHydrationWarning

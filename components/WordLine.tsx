@@ -10,7 +10,6 @@ const WordLine = ({
   wordIsFinal: boolean
   correctWord: string
 }) => {
-  console.log(wordIsFinal)
   // Fill the letters array with empty strings up to 5 characters
   const letters = guess.split('').concat(Array(5 - guess.length).fill(''))
 

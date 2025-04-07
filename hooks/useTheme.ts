@@ -7,7 +7,17 @@ export const useTheme = () => {
 
   useEffect(() => {
     const stored = localStorage.getItem('theme') as 'light' | 'dark' | null
-    const initialTheme = stored || 'light'
+
+    let initialTheme: 'light' | 'dark'
+    if (stored) {
+      initialTheme = stored
+    } else {
+      const prefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)'
+      ).matches
+      initialTheme = prefersDark ? 'dark' : 'light'
+    }
+
     setTheme(initialTheme)
     document.documentElement.classList.toggle('dark', initialTheme === 'dark')
   }, [])
