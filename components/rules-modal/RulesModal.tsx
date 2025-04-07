@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { X } from 'lucide-react'
-import LetterBox from '@/components/modal/LetterBox'
+import LetterBox from '@/components/rules-modal/LetterBox'
 
 interface RulesModalProps {
   isOpen: boolean

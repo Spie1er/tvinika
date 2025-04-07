@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { ReactNode } from 'react'
 import Header from '@/components/Header'
-import localFont from 'next/font/local'
 
 export const metadata: Metadata = {
   title: 'ტვინიკა',
@@ -24,7 +23,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Header />
-        <main className='flex-1 container mx-auto px-4 py-6 dark:text-white'>
+        <main className='flex-1 flex  justify-center container mx-auto px-4 py-6 dark:text-white'>
           {children}
         </main>
       </body>
