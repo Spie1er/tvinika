@@ -19,12 +19,14 @@ const WordLine = ({
 
   return (
     <div
-      className={`relative flex gap-1 mt-1 line${currentNotFound || currentAlreadyUsed ? ' shake' : ''}`}
+      className={`relative flex gap-1 mt-1 line${
+        currentNotFound || currentAlreadyUsed ? ' shake' : ''
+      }`}
     >
       {letters.map((letter, index) => {
         const status =
           wordIsFinal ?
-            checkLetterStatus(letter, index, correctWord)
+            checkLetterStatus(letter, index, correctWord, guess)
           : undefined
 
         return <Tile key={index} letter={letter} status={status} />
