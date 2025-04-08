@@ -15,6 +15,9 @@ export default function Home() {
     success: false,
     modalOpen: false
   })
+  const [wordNotFound, setWordNotFound] = useState(false)
+  const [alreadyUsed, setAlreadyUsed] = useState(false)
+
   const currentGuessIndex = guesses.findIndex((guess) => guess === null)
 
   useEffect(() => {
@@ -33,6 +36,19 @@ export default function Home() {
           return
         }
 
+        // Check if word exists
+        if (!words.includes(currentGuess)) {
+          setWordNotFound(true)
+          setTimeout(() => setWordNotFound(false), 2000)
+          return
+        }
+
+        if (guesses.includes(currentGuess)) {
+          setAlreadyUsed(true)
+          setTimeout(() => setAlreadyUsed(false), 2000)
+          return
+        }
+
         const newGuessesArray = [...guesses]
         newGuessesArray[currentGuessIndex] = currentGuess
         setGuesses(newGuessesArray)
@@ -42,17 +58,25 @@ export default function Home() {
           setTimeout(() => {
             setIsGameOver({ isOver: true, success: true, modalOpen: true })
           }, 2500)
+          return
         }
 
         if (currentGuessIndex === 5) {
           setTimeout(() => {
             setIsGameOver({ isOver: true, success: false, modalOpen: true })
           }, 2500)
+          return
         }
       }
 
+      //if backspace is pressed we delete last letter
+      if (event.key === 'Backspace') {
+        setCurrentGuess((prev) => prev.slice(0, -1))
+        return
+      }
+
       //Returning if the length hits maximum, and if we aren't deleting smth
-      if (currentGuess.length >= 5 && event.key !== 'Backspace') return
+      if (currentGuess.length >= 5) return
 
       //Checking if the keyboard is Georgian (ka)
       if (/[\u10A0-\u10FF]/.test(event.key)) {
@@ -60,12 +84,8 @@ export default function Home() {
       }
       //Checking if the keyboard is English and map to Georgian letters
       else if (/^[a-z]$|^[WRTSZJC]$/.test(event.key)) {
-        const englishToGeorgian = letterMapping[event.key]
-        setCurrentGuess((prevState) => prevState + englishToGeorgian)
-      }
-      //if backspace is pressed we delete last letter
-      else if (event.key === 'Backspace') {
-        setCurrentGuess((prevState) => prevState.slice(0, -1))
+        const mapped = letterMapping[event.key]
+        if (mapped) setCurrentGuess((prev) => prev + mapped)
       } else {
         return
       }
@@ -76,22 +96,47 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [currentGuess, isGameOver.isOver, currentGuessIndex, randomWord, guesses])
 
+  const restartGame = () => {
+    const newWord = words[Math.floor(Math.random() * words.length)]
+    setRandomWord(newWord)
+    setGuesses(Array(6).fill(null))
+    setCurrentGuess('')
+    setIsGameOver({ isOver: false, success: false, modalOpen: false })
+  }
+
+  console.log(randomWord)
   return (
     <>
       <div>
-        <div className='flex flex-col'>
-          {guesses.map((guess, index) => {
-            const isCurrentGuess = index === currentGuessIndex
-            return (
-              <WordLine
-                guess={isCurrentGuess ? currentGuess : (guess ?? '')}
-                key={`${guess}-${index}`}
-                wordIsFinal={!isCurrentGuess && guess !== null}
-                correctWord={randomWord}
-              />
-            )
-          })}
+        <div
+          className={`transition duration-500 ${isGameOver.isOver ? 'blur-[1px]' : ''}`}
+        >
+          <div className='flex flex-col'>
+            {guesses.map((guess, index) => {
+              const isCurrentGuess = index === currentGuessIndex
+              return (
+                <WordLine
+                  guess={isCurrentGuess ? currentGuess : (guess ?? '')}
+                  key={`${guess}-${index}`}
+                  wordIsFinal={!isCurrentGuess && guess !== null}
+                  correctWord={randomWord}
+                  currentNotFound={isCurrentGuess && wordNotFound}
+                  currentAlreadyUsed={isCurrentGuess && alreadyUsed}
+                />
+              )
+            })}
+          </div>
         </div>
+        {isGameOver.isOver && !isGameOver.modalOpen && (
+          <div className='flex mt-4 items-center'>
+            <button
+              className='bg-blue-600 text-white py-2 px-4 rounded-lg w-full cursor-pointer'
+              onClick={() => restartGame()}
+            >
+              ხელახა დაწყება
+            </button>
+          </div>
+        )}
       </div>
       {isGameOver.modalOpen && (
         <GameOverModal
@@ -100,9 +145,7 @@ export default function Home() {
           onClose={() =>
             setIsGameOver((prevState) => ({ ...prevState, modalOpen: false }))
           }
-          onRestart={() => {
-            console.log('new game')
-          }}
+          onRestart={() => restartGame()}
           guessedWord={randomWord}
         />
       )}

@@ -20,14 +20,15 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
 }) => {
   if (!isOpen) return null
 
-  const shareOnFacebook = () => {
-    const message = `მე სწორად გამოვიცანი სიტყვა: "${guessedWord}:`
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      window.location.href
-    )}&quote=${encodeURIComponent(message)}`
-    window.open(url, '_blank')
-  }
+  // const shareOnFacebook = () => {
+  //   const message = `მე სწორად გამოვიცანი სიტყვა: "${guessedWord}:`
+  //   const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+  //     window.location.href
+  //   )}&quote=${encodeURIComponent(message)}`
+  //   window.open(url, '_blank')
+  // }
 
+  //TODO Add a share button and restart from here.
   return (
     <div
       className='fixed inset-0 bg-black/60 z-50 flex items-center justify-center text-gray-900 dark:text-white'
@@ -52,19 +53,27 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
           }
         </p>
         <div className='flex flex-col items-center gap-4'>
-          {isGameWon && (
-            <button
-              onClick={shareOnFacebook}
-              className='bg-blue-600 text-white py-2 px-4 rounded-lg w-full cursor-pointer'
-            >
-              გაზიარება
-            </button>
-          )}
+          {/*{isGameWon && (*/}
+          {/*  <button*/}
+          {/*    onClick={shareOnFacebook}*/}
+          {/*    className='bg-blue-600 text-white py-2 px-4 rounded-lg w-full cursor-pointer'*/}
+          {/*  >*/}
+          {/*    გაზიარება*/}
+          {/*  </button>*/}
+          {/*)}*/}
+
           <button
             onClick={onRestart}
-            className='bg-gray-800 text-white py-2 px-4 rounded-lg w-full cursor-pointer'
+            className='bg-blue-600 text-white py-2 px-4 rounded-lg w-full cursor-pointer'
           >
             ხელახლა დაწყება
+          </button>
+
+          <button
+            onClick={onClose}
+            className='bg-gray-800 text-white py-2 px-4 rounded-lg w-full cursor-pointer'
+          >
+            დახურვა
           </button>
         </div>
       </div>

@@ -15,7 +15,7 @@ const Tile = ({
 
   return (
     <div
-      className={`font-guess w-[70px] h-[70px] flex items-center justify-center text-2xl font-bold ${bgAndText}`}
+      className={`font-guess w-[50px] h-[50px] flex items-center justify-center text-2xl font-bold ${bgAndText}`}
     >
       {letter}
     </div>
