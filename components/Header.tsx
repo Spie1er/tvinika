@@ -8,14 +8,13 @@ import RulesModal from '@/components/rules-modal/RulesModal'
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const openModal = () => setIsModalOpen(true)
-  const closeModal = () => setIsModalOpen(false)
-
   return (
     <header className='bg-white dark:bg-gray-800 shadow-md'>
-      <div className='container mx-auto px-4 py-3 flex justify-between items-center'>
-        <Link href='/' className='flex items-center gap-2'>
+      <div className='container mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-4'>
+        <Link
+          href='/'
+          className='flex justify-center sm:justify-start items-center gap-2 w-full sm:w-auto'
+        >
           <Image
             src='/logo.png'
             alt='logo'
@@ -25,11 +24,11 @@ const Header = () => {
             style={{ width: 'auto', height: 'auto' }}
           />
         </Link>
-        <div className='flex items-center space-x-4'>
-          <nav className='md:flex gap-4 items-center'>
+        <div className='flex justify-center sm:justify-end items-center space-x-4 w-full sm:w-auto'>
+          <nav className='flex gap-4 items-center'>
             <button
               className='p-2 dark:text-white rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer'
-              onClick={openModal}
+              onClick={() => setIsModalOpen(true)}
             >
               წესები
             </button>
@@ -38,7 +37,7 @@ const Header = () => {
         </div>
       </div>
 
-      <RulesModal isOpen={isModalOpen} onClose={closeModal} />
+      <RulesModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </header>
   )
 }

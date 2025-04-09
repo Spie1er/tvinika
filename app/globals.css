@@ -156,3 +156,17 @@
         transform: translateX(0);
     }
 }
+
+
+
+.keyboard-key.correct {
+    background-color: green;
+}
+
+.keyboard-key.present {
+    background-color: yellow;
+}
+
+.keyboard-key.absent {
+    background-color: gray;
+}

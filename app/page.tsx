@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import WordLine from '@/components/WordLine'
 import { letterMapping } from '@/utils/letter-mapping'
 import GameOverModal from '@/components/game-over-modal/GameOverModal'
+import Keyboard from '@/components/keyboard/Keyboard'
 
 export default function Home() {
   const [randomWord, setRandomWord] = useState('')
@@ -108,36 +109,41 @@ export default function Home() {
   return (
     <>
       <div>
-        <div
-          className={`transition duration-500 ${isGameOver.isOver ? 'blur-[1px]' : ''}`}
-        >
-          <div className='flex flex-col'>
-            {guesses.map((guess, index) => {
-              const isCurrentGuess = index === currentGuessIndex
-              return (
-                <WordLine
-                  guess={isCurrentGuess ? currentGuess : (guess ?? '')}
-                  key={`${guess}-${index}`}
-                  wordIsFinal={!isCurrentGuess && guess !== null}
-                  correctWord={randomWord}
-                  currentNotFound={isCurrentGuess && wordNotFound}
-                  currentAlreadyUsed={isCurrentGuess && alreadyUsed}
-                />
-              )
-            })}
+        <div>
+          <div
+            className={`transition duration-500 ${isGameOver.isOver ? 'opacity-50' : ''}`}
+          >
+            <div className='flex flex-col justify-self-center'>
+              {guesses.map((guess, index) => {
+                const isCurrentGuess = index === currentGuessIndex
+                return (
+                  <WordLine
+                    guess={isCurrentGuess ? currentGuess : (guess ?? '')}
+                    key={`${guess}-${index}`}
+                    wordIsFinal={!isCurrentGuess && guess !== null}
+                    correctWord={randomWord}
+                    currentNotFound={isCurrentGuess && wordNotFound}
+                    currentAlreadyUsed={isCurrentGuess && alreadyUsed}
+                  />
+                )
+              })}
+            </div>
           </div>
+          {isGameOver.isOver && !isGameOver.modalOpen && (
+            <div className='flex mt-4 justify-self-center'>
+              <button
+                className='bg-blue-600 text-white py-2 w-full px-4 rounded-lg cursor-pointer'
+                onClick={() => restartGame()}
+              >
+                ხელახა დაწყება
+              </button>
+            </div>
+          )}
         </div>
-        {isGameOver.isOver && !isGameOver.modalOpen && (
-          <div className='flex mt-4 items-center'>
-            <button
-              className='bg-blue-600 text-white py-2 px-4 rounded-lg w-full cursor-pointer'
-              onClick={() => restartGame()}
-            >
-              ხელახა დაწყება
-            </button>
-          </div>
-        )}
+
+        {!isGameOver.isOver && <Keyboard />}
       </div>
+
       {isGameOver.modalOpen && (
         <GameOverModal
           isOpen={isGameOver.modalOpen}
