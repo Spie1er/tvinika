@@ -11,6 +11,7 @@ import {
   getRandomWord,
   statusPriority
 } from '@/utils/helperFunctions'
+import { playAudio } from '@/utils/audio'
 
 export default function Home() {
   const [randomWord, setRandomWord] = useState('')
@@ -79,6 +80,7 @@ export default function Home() {
 
         if (randomWord === currentGuess) {
           setTimeout(() => {
+            playAudio('win')
             setIsGameOver({ isOver: true, success: true, modalOpen: true })
           }, 2500)
           return
@@ -86,6 +88,7 @@ export default function Home() {
 
         if (currentGuessIndex === 5) {
           setTimeout(() => {
+            playAudio('lose')
             setIsGameOver({ isOver: true, success: false, modalOpen: true })
           }, 2500)
           return

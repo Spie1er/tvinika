@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { fullKeyboard, LetterKeys } from '@/utils/keyboard-letters'
 import { ArrowBigUp, Delete } from 'lucide-react'
+import { playAudio } from '@/utils/audio'
 
 type KeyboardProps = {
   onKeyClick: (key: string) => void
@@ -11,8 +12,19 @@ type KeyboardProps = {
 
 const Keyboard = ({ onKeyClick, usedKeys }: KeyboardProps) => {
   const [isShift, setIsShift] = useState(false)
+  const [clickedKey, setClickedKey] = useState<string | null>(null)
 
-  console.log(usedKeys)
+  // Function to handle key click animation
+  const handleKeyClick = (key: string) => {
+    playAudio('click')
+    setClickedKey(key)
+    onKeyClick(key)
+
+    // Reset the clicked key after a short delay
+    setTimeout(() => {
+      setClickedKey(null)
+    }, 200) // The key stays enlarged for 200ms
+  }
 
   return (
     <div className='flex flex-col items-center gap-2 mt-5'>
@@ -49,7 +61,8 @@ const Keyboard = ({ onKeyClick, usedKeys }: KeyboardProps) => {
             const finalKey =
               isShift && shiftedLetter ? shiftedLetter : normalLetter
 
-            // const status = usedKeys[normalLetter]
+            // Check if the key was clicked for the animation
+            const isClicked = clickedKey === finalKey
 
             let bgClass =
               'bg-zinc-200 dark:bg-zinc-600 text-[#333] dark:text-white'
@@ -72,9 +85,10 @@ const Keyboard = ({ onKeyClick, usedKeys }: KeyboardProps) => {
               <button
                 key={normalLetter}
                 className={`w-[30px] h-[50px] text-[16px] sm:w-[40px] sm:h-[50px] sm:text-[18px] rounded-lg border-none cursor-pointer transition-all
-                duration-200 ease-in-out flex items-center justify-center relative shadow-sm/30 ${isShift && shiftedLetter ? shiftedBg : bgClass}`}
+                duration-200 ease-in-out flex items-center justify-center relative shadow-sm/30 
+                ${isClicked ? 'scale-110' : ''} ${isShift && shiftedLetter ? shiftedBg : bgClass}`}
                 onClick={() => {
-                  onKeyClick(finalKey)
+                  handleKeyClick(finalKey)
                   if (isShift) setIsShift(false)
                 }}
               >
