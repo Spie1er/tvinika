@@ -1,11 +1,12 @@
 'use client'
 
 import { words } from '@/words.json'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import WordLine from '@/components/WordLine'
 import { letterMapping } from '@/utils/letter-mapping'
 import GameOverModal from '@/components/game-over-modal/GameOverModal'
 import Keyboard from '@/components/keyboard/Keyboard'
+import { getRandomWord } from '@/utils/helperFunctions'
 
 export default function Home() {
   const [randomWord, setRandomWord] = useState('')
@@ -21,23 +22,13 @@ export default function Home() {
 
   const currentGuessIndex = guesses.findIndex((guess) => guess === null)
 
-  useEffect(() => {
-    const selectedWord = words[Math.floor(Math.random() * words.length)]
-    setRandomWord(selectedWord)
-  }, [])
+  const handleKeyInput = useCallback(
+    (key: string) => {
+      if (isGameOver.isOver) return
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (isGameOver.isOver) {
-        return
-      }
+      if (key === 'Enter') {
+        if (currentGuess.length !== 5) return
 
-      if (event.key === 'Enter') {
-        if (currentGuess.length !== 5) {
-          return
-        }
-
-        // Check if word exists
         if (!words.includes(currentGuess)) {
           setWordNotFound(true)
           setTimeout(() => setWordNotFound(false), 2000)
@@ -70,32 +61,36 @@ export default function Home() {
         }
       }
 
-      //if backspace is pressed we delete last letter
-      if (event.key === 'Backspace') {
+      if (key === 'Backspace') {
         setCurrentGuess((prev) => prev.slice(0, -1))
         return
       }
 
-      //Returning if the length hits maximum, and if we aren't deleting smth
       if (currentGuess.length >= 5) return
 
-      //Checking if the keyboard is Georgian (ka)
-      if (/[\u10A0-\u10FF]/.test(event.key)) {
-        setCurrentGuess((prevState) => prevState + event.key)
-      }
-      //Checking if the keyboard is English and map to Georgian letters
-      else if (/^[a-z]$|^[WRTSZJC]$/.test(event.key)) {
-        const mapped = letterMapping[event.key]
+      if (/[\u10A0-\u10FF]/.test(key)) {
+        setCurrentGuess((prevState) => prevState + key)
+      } else if (/^[a-z]$|^[WRTSZJC]$/.test(key)) {
+        const mapped = letterMapping[key]
         if (mapped) setCurrentGuess((prev) => prev + mapped)
-      } else {
-        return
       }
+    },
+    [isGameOver.isOver, currentGuess, currentGuessIndex, guesses, randomWord]
+  )
+
+  useEffect(() => {
+    const selectedWord = getRandomWord(words)
+    setRandomWord(selectedWord)
+  }, [])
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      handleKeyInput(event.key)
     }
 
     window.addEventListener('keydown', handleKeyDown)
-
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentGuess, isGameOver.isOver, currentGuessIndex, randomWord, guesses])
+  }, [handleKeyInput])
 
   const restartGame = () => {
     const newWord = words[Math.floor(Math.random() * words.length)]
@@ -141,7 +136,7 @@ export default function Home() {
           )}
         </div>
 
-        {!isGameOver.isOver && <Keyboard />}
+        {!isGameOver.isOver && <Keyboard onKeyClick={handleKeyInput} />}
       </div>
 
       {isGameOver.modalOpen && (

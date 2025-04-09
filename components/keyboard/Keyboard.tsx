@@ -1,8 +1,12 @@
-import { fullKeyboard, LetterKeys } from '@/utils/keyboard-letters'
 import { useState } from 'react'
-import { Delete, ArrowBigUp } from 'lucide-react'
+import { fullKeyboard, LetterKeys } from '@/utils/keyboard-letters'
+import { ArrowBigUp, Delete } from 'lucide-react'
 
-const Keyboard = () => {
+type KeyboardProps = {
+  onKeyClick: (key: string) => void
+}
+
+const Keyboard = ({ onKeyClick }: KeyboardProps) => {
   const [isShift, setIsShift] = useState(false)
   return (
     <div className='flex flex-col items-center gap-2 mt-5'>
@@ -21,6 +25,8 @@ const Keyboard = () => {
                   onClick={() => {
                     if (key === 'shift') {
                       setIsShift((prevState) => !prevState)
+                    } else {
+                      onKeyClick('Backspace')
                     }
                   }}
                 >
@@ -34,6 +40,8 @@ const Keyboard = () => {
             const letterKey = key as LetterKeys
             const normalLetter = letterKey.letter
             const shiftedLetter = letterKey.shifted
+            const finalKey =
+              isShift && shiftedLetter ? shiftedLetter : normalLetter
 
             return (
               <button
@@ -41,14 +49,12 @@ const Keyboard = () => {
                 className='w-[30px] h-[50px] text-[16px] sm:w-[40px] sm:h-[50px] sm:text-[18px] rounded-lg border-none cursor-pointer transition-all
                 duration-200 ease-in-out flex items-center justify-center relative bg-zinc-200 dark:bg-zinc-600 shadow-sm/30'
                 onClick={() => {
-                  console.log(isShift ? shiftedLetter : normalLetter)
-                  if (isShift) {
-                    setIsShift(false)
-                  }
+                  onKeyClick(finalKey)
+                  if (isShift) setIsShift(false)
                 }}
               >
                 <span className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
-                  {isShift && letterKey.shifted ? shiftedLetter : normalLetter}
+                  {finalKey}
                 </span>
 
                 {shiftedLetter && (
@@ -64,7 +70,7 @@ const Keyboard = () => {
       <div className='flex w-full mt-3 justify-center'>
         <button
           className='bg-blue-600 text-white w-[200px] py-2 px-4 rounded-lg cursor-pointer'
-          onClick={() => console.log('enteeer')}
+          onClick={() => onKeyClick('Enter')}
         >
           შემოწმება
         </button>

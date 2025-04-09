@@ -28,3 +28,6 @@ export const checkLetterStatus = (
 
   return letterStatuses[index] as 'correct' | 'present' | 'absent' | undefined
 }
+
+export const getRandomWord = (words: string[]) =>
+  words[Math.floor(Math.random() * words.length)]
