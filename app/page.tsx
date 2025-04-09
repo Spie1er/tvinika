@@ -1,7 +1,7 @@
 'use client'
 
 import { words } from '@/words.json'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import WordLine from '@/components/WordLine'
 import { letterMapping } from '@/utils/letter-mapping'
 import GameOverModal from '@/components/game-over-modal/GameOverModal'
@@ -11,7 +11,7 @@ import {
   getRandomWord,
   statusPriority
 } from '@/utils/helperFunctions'
-import { playAudio } from '@/utils/audio'
+// import { playAudio } from '@/utils/audio'
 
 export default function Home() {
   const [randomWord, setRandomWord] = useState('')
@@ -24,6 +24,22 @@ export default function Home() {
   })
   const [wordNotFound, setWordNotFound] = useState(false)
   const [alreadyUsed, setAlreadyUsed] = useState(false)
+
+  const winAudioRef = useRef<HTMLAudioElement | null>(null)
+  const loseAudioRef = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    winAudioRef.current = new Audio('/audio/win.mp3')
+    loseAudioRef.current = new Audio('/audio/lose.mp3')
+  }, [])
+
+  const playAudio = (type: 'win' | 'lose') => {
+    const audio = type === 'win' ? winAudioRef.current : loseAudioRef.current
+    if (audio) {
+      audio.currentTime = 0
+      audio.play().then()
+    }
+  }
 
   const currentGuessIndex = guesses.findIndex((guess) => guess === null)
 
