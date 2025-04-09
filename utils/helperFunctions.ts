@@ -31,3 +31,12 @@ export const checkLetterStatus = (
 
 export const getRandomWord = (words: string[]) =>
   words[Math.floor(Math.random() * words.length)]
+
+export const statusPriority = (
+  status: 'correct' | 'present' | 'absent' | undefined
+): number => {
+  if (status === 'correct') return 3
+  if (status === 'present') return 2
+  if (status === 'absent') return 1
+  return 0
+}

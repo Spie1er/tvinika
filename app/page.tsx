@@ -6,7 +6,11 @@ import WordLine from '@/components/WordLine'
 import { letterMapping } from '@/utils/letter-mapping'
 import GameOverModal from '@/components/game-over-modal/GameOverModal'
 import Keyboard from '@/components/keyboard/Keyboard'
-import { getRandomWord } from '@/utils/helperFunctions'
+import {
+  checkLetterStatus,
+  getRandomWord,
+  statusPriority
+} from '@/utils/helperFunctions'
 
 export default function Home() {
   const [randomWord, setRandomWord] = useState('')
@@ -21,6 +25,31 @@ export default function Home() {
   const [alreadyUsed, setAlreadyUsed] = useState(false)
 
   const currentGuessIndex = guesses.findIndex((guess) => guess === null)
+
+  const [usedKeys, setUsedKeys] = useState<
+    Record<string, 'correct' | 'present' | 'absent'>
+  >({})
+
+  const updateUsedKeys = useCallback(
+    (guess: string, correctWord: string) => {
+      const updatedKeys = { ...usedKeys }
+
+      for (let i = 0; i < 5; i++) {
+        const letter = guess[i]
+        const status = checkLetterStatus(letter, i, correctWord, guess)
+
+        if (
+          !updatedKeys[letter] ||
+          statusPriority(status) > statusPriority(updatedKeys[letter])
+        ) {
+          updatedKeys[letter] = status as 'absent' | 'present' | 'correct'
+        }
+      }
+
+      setUsedKeys(updatedKeys)
+    },
+    [usedKeys]
+  )
 
   const handleKeyInput = useCallback(
     (key: string) => {
@@ -40,6 +69,8 @@ export default function Home() {
           setTimeout(() => setAlreadyUsed(false), 2000)
           return
         }
+
+        updateUsedKeys(currentGuess, randomWord)
 
         const newGuessesArray = [...guesses]
         newGuessesArray[currentGuessIndex] = currentGuess
@@ -75,7 +106,14 @@ export default function Home() {
         if (mapped) setCurrentGuess((prev) => prev + mapped)
       }
     },
-    [isGameOver.isOver, currentGuess, currentGuessIndex, guesses, randomWord]
+    [
+      isGameOver.isOver,
+      currentGuess,
+      currentGuessIndex,
+      guesses,
+      randomWord,
+      updateUsedKeys
+    ] // Add updateUsedKeys to dependencies
   )
 
   useEffect(() => {
@@ -98,6 +136,7 @@ export default function Home() {
     setGuesses(Array(6).fill(null))
     setCurrentGuess('')
     setIsGameOver({ isOver: false, success: false, modalOpen: false })
+    setUsedKeys({})
   }
 
   console.log(randomWord)
@@ -136,7 +175,9 @@ export default function Home() {
           )}
         </div>
 
-        {!isGameOver.isOver && <Keyboard onKeyClick={handleKeyInput} />}
+        {!isGameOver.isOver && (
+          <Keyboard onKeyClick={handleKeyInput} usedKeys={usedKeys} />
+        )}
       </div>
 
       {isGameOver.modalOpen && (
