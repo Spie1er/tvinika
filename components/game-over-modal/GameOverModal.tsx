@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { X } from 'lucide-react'
 
 interface GameOverModalProps {
@@ -10,7 +10,7 @@ interface GameOverModalProps {
   // score: number
 }
 
-const GameOverModal: React.FC<GameOverModalProps> = ({
+const GameOverModal: FC<GameOverModalProps> = ({
   isOpen,
   onClose,
   onRestart,
@@ -28,7 +28,7 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
   //   window.open(url, '_blank')
   // }
 
-  //TODO Add a share button and restart from here.
+  //TODO Add a share button
   return (
     <div
       className='fixed inset-0 bg-black/60 z-50 flex items-center justify-center text-gray-900 dark:text-white'
