@@ -11,7 +11,6 @@ import {
   getRandomWord,
   statusPriority
 } from '@/utils/helperFunctions'
-// import { playAudio } from '@/utils/audio'
 
 export default function Home() {
   const [randomWord, setRandomWord] = useState('')
@@ -158,7 +157,6 @@ export default function Home() {
     setUsedKeys({})
   }
 
-  console.log(randomWord)
   return (
     <>
       <div>
