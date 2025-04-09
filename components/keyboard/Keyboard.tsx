@@ -7,15 +7,15 @@ const Keyboard = () => {
   return (
     <div className='flex flex-col items-center gap-2 mt-5'>
       {fullKeyboard.map((row, rowIndex) => (
-        <div className='flex gap-1.5' key={rowIndex}>
+        <div className='flex gap-1 sm:gap-1.5' key={rowIndex}>
           {row.map((key) => {
             if (key === 'shift' || key === 'Backspace') {
               return (
                 <button
                   key={key}
-                  className={`w-[60px] h-[50px] rounded-lg border-none cursor-pointer transition-all 
+                  className={`sm:w-[60px] sm:h-[50px] w-[50px] rounded-lg border-none cursor-pointer transition-all 
                   duration-200 ease-in-out flex items-center justify-center relative shadow-sm/30 
-                  bg-zinc-100 dark:bg-zinc-600 ${
+                  bg-zinc-200 dark:bg-zinc-600 ${
                     isShift ? 'text-sky-600' : 'text-[#333333] dark:text-white'
                   }`}
                   onClick={() => {
@@ -38,8 +38,8 @@ const Keyboard = () => {
             return (
               <button
                 key={normalLetter}
-                className='w-[40px] h-[50px] text-[18px] rounded-lg border-none cursor-pointer transition-all
-                duration-200 ease-in-out flex items-center justify-center relative bg-zinc-100 dark:bg-zinc-600 shadow-sm/30'
+                className='w-[30px] h-[50px] text-[16px] sm:w-[40px] sm:h-[50px] sm:text-[18px] rounded-lg border-none cursor-pointer transition-all
+                duration-200 ease-in-out flex items-center justify-center relative bg-zinc-200 dark:bg-zinc-600 shadow-sm/30'
                 onClick={() => {
                   console.log(isShift ? shiftedLetter : normalLetter)
                   if (isShift) {
@@ -47,23 +47,12 @@ const Keyboard = () => {
                   }
                 }}
               >
-                <span
-                  className={`absolute text-[20px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${
-                    isShift && letterKey.shifted ?
-                      'text-current'
-                    : 'text-current'
-                  }`}
-                >
+                <span className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                   {isShift && letterKey.shifted ? shiftedLetter : normalLetter}
                 </span>
+
                 {shiftedLetter && (
-                  <span
-                    className={`absolute text-[12px] text-[oklch(0.598_0.137_239.971)] ${
-                      isShift ?
-                        'top-[2px] right-[5px]'
-                      : 'top-[2px] right-[5px]'
-                    }`}
-                  >
+                  <span className='absolute text-[10px] sm:text-[12px] text-[oklch(0.598_0.137_239.971)] top-[2px] right-[5px]'>
                     {isShift ? normalLetter : shiftedLetter}
                   </span>
                 )}
