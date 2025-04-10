@@ -186,7 +186,7 @@ export default function Home() {
                 className='bg-blue-600 text-white py-2 w-full px-4 rounded-lg cursor-pointer'
                 onClick={() => restartGame()}
               >
-                ხელახა დაწყება
+                ხელახლა დაწყება
               </button>
             </div>
           )}
