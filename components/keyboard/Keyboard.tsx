@@ -40,6 +40,9 @@ const Keyboard = ({ onKeyClick, usedKeys }: KeyboardProps) => {
                   bg-zinc-200 dark:bg-zinc-600 ${
                     isShift ? 'text-sky-600' : 'text-[#333333] dark:text-white'
                   }`}
+                  aria-label={
+                    key === 'shift' ? 'shift button' : 'backspace button'
+                  }
                   onClick={() => {
                     if (key === 'shift') {
                       setIsShift((prevState) => !prevState)
