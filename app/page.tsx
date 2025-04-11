@@ -12,9 +12,12 @@ import {
   statusPriority
 } from '@/utils/helperFunctions'
 
+const NUMBER_OF_GUESSES = 6
+const WORD_LENGTH = 5
+
 export default function Home() {
   const [randomWord, setRandomWord] = useState('')
-  const [guesses, setGuesses] = useState(Array(6).fill(null))
+  const [guesses, setGuesses] = useState(Array(NUMBER_OF_GUESSES).fill(null))
   const [currentGuess, setCurrentGuess] = useState('')
   const [isGameOver, setIsGameOver] = useState({
     isOver: false,
@@ -50,7 +53,7 @@ export default function Home() {
     (guess: string, correctWord: string) => {
       const updatedKeys = { ...usedKeys }
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < WORD_LENGTH; i++) {
         const letter = guess[i]
         const status = checkLetterStatus(letter, i, correctWord, guess)
 
@@ -72,7 +75,7 @@ export default function Home() {
       if (isGameOver.isOver) return
 
       if (key === 'Enter') {
-        if (currentGuess.length !== 5) return
+        if (currentGuess.length !== WORD_LENGTH) return
 
         if (!words.includes(currentGuess)) {
           setWordNotFound(true)
@@ -101,7 +104,7 @@ export default function Home() {
           return
         }
 
-        if (currentGuessIndex === 5) {
+        if (currentGuessIndex === NUMBER_OF_GUESSES - 1) {
           setTimeout(() => {
             playAudio('lose')
             setIsGameOver({ isOver: true, success: false, modalOpen: true })
@@ -115,7 +118,7 @@ export default function Home() {
         return
       }
 
-      if (currentGuess.length >= 5) return
+      if (currentGuess.length >= WORD_LENGTH) return
 
       if (/[\u10A0-\u10FF]/.test(key)) {
         setCurrentGuess((prevState) => prevState + key)
@@ -151,7 +154,7 @@ export default function Home() {
   const restartGame = () => {
     const newWord = words[Math.floor(Math.random() * words.length)]
     setRandomWord(newWord)
-    setGuesses(Array(6).fill(null))
+    setGuesses(Array(NUMBER_OF_GUESSES).fill(null))
     setCurrentGuess('')
     setIsGameOver({ isOver: false, success: false, modalOpen: false })
     setUsedKeys({})
@@ -175,6 +178,8 @@ export default function Home() {
                     correctWord={randomWord}
                     currentNotFound={isCurrentGuess && wordNotFound}
                     currentAlreadyUsed={isCurrentGuess && alreadyUsed}
+                    //NOTE This can be randomWord.length too
+                    wordLength={WORD_LENGTH}
                   />
                 )
               })}

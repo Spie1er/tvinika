@@ -6,16 +6,20 @@ const WordLine = ({
   wordIsFinal,
   correctWord,
   currentNotFound,
-  currentAlreadyUsed
+  currentAlreadyUsed,
+  wordLength
 }: {
   guess: string
   wordIsFinal: boolean
   correctWord: string
   currentNotFound: boolean
   currentAlreadyUsed: boolean
+  wordLength: number
 }) => {
-  // Fill the letters array with empty strings up to 5 characters
-  const letters = guess.split('').concat(Array(5 - guess.length).fill(''))
+  // Fill the letters array with empty strings up to wordLength size
+  const letters = guess
+    .split('')
+    .concat(Array(wordLength - guess.length).fill(''))
 
   return (
     <div
