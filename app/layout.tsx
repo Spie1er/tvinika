@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     'სიტყვების გამოცნობა'
   ],
   icons: {
-    icon: '/favicon.png'
+    icon: '/favicon.ico'
   },
   openGraph: {
     title: 'ტვინიკა - გამოიცანი სიტყვა 6 ცდაში!',
